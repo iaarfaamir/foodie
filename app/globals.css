@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: #FFF3E0;
+  color: #2B2B2B;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background: #FFF3E0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(214, 40, 40, 0.2);
+}
+
+#toast-container {
+  z-index: 9999;
+}
