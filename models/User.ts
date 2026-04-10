@@ -19,7 +19,7 @@ const UserSchema = new Schema(
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
     cart: [CartItemSchema],
   },
-  { timestamps: true }
+  { timestamps: true, strict: false }
 );
 
 const User = models.User || model('User', UserSchema);

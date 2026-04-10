@@ -18,7 +18,6 @@ async function connect() {
   }
 
   if (!cached.promise) {
-    mongoose.set('strictQuery', false);
     cached.promise = mongoose.connect(uri, {
       bufferCommands: false,
     });

@@ -20,7 +20,7 @@ const OrderSchema = new Schema(
     paymentMethod: { type: String, default: 'Cash on Delivery' },
     status: { type: String, enum: ['pending', 'preparing', 'delivered'], default: 'pending' },
   },
-  { timestamps: true }
+  { timestamps: true, strict: false }
 );
 
 const Order = models.Order || model('Order', OrderSchema);

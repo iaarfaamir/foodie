@@ -10,7 +10,7 @@ const FoodSchema = new Schema(
     rating: { type: Number, default: 4.8 },
     featured: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  { timestamps: true, strict: false }
 );
 
 const Food = models.Food || model('Food', FoodSchema);
