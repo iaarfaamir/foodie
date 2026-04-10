@@ -24,24 +24,37 @@ const UserSchema = new Schema(
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
     cart: [CartItemSchema],
   },
-  { timestamps: true }
+  { timestamps: true, strict: false }
 );
 
 const User = mongoose.models.User || model('User', UserSchema);
 
 async function createAdmin() {
   try {
+    if (!process.env.MONGODB_URI) {
+      console.error('❌ MONGODB_URI not defined in .env.local');
+      console.log('Please add: MONGODB_URI=mongodb://localhost:27017/foodie');
+      process.exit(1);
+    }
+
+    console.log('📡 Connecting to MongoDB...');
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('Connected to MongoDB');
+    console.log('✅ Connected to MongoDB');
+
+    // Check existing users
+    const userCount = await User.countDocuments({});
+    console.log(`📊 Total users in database: ${userCount}`);
 
     // Check if admin already exists
     const existingAdmin = await User.findOne({ email: 'admin@foodie.com' });
     if (existingAdmin) {
-      console.log('Admin user already exists');
+      console.log('⚠️  Admin user already exists');
+      console.log(`   Email: ${existingAdmin.email}`);
+      console.log(`   Role: ${existingAdmin.role}`);
       return;
     }
 
-    const hashedPassword = await bcrypt.hash('admin123', 10);
+    const hashedPassword = await bcrypt.hash('admin123', 12);
     const admin = new User({
       name: 'Admin',
       email: 'admin@foodie.com',
@@ -50,14 +63,17 @@ async function createAdmin() {
     });
 
     await admin.save();
-    console.log('Admin user created successfully');
-    console.log('Email: admin@foodie.com');
-    console.log('Password: admin123');
+    console.log('✅ Admin user created successfully!');
+    console.log('------------------------------------');
+    console.log('📧 Email: admin@foodie.com');
+    console.log('🔑 Password: admin123');
+    console.log('------------------------------------');
   } catch (error) {
-    console.error('Error creating admin user:', error);
+    console.error('❌ Error creating admin user:', error.message);
+    process.exit(1);
   } finally {
     await mongoose.disconnect();
-    console.log('Disconnected from MongoDB');
+    console.log('📴 Disconnected from MongoDB');
   }
 }
 
